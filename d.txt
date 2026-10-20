@@ -6,12 +6,28 @@
 [1;90mprint("Salt:", s); print("Hashed Password:", h)[0m
 [32mprint("Password matches!" if bcrypt.checkpw(pw, h) else "Invalid password!")[0m
 
+[1;36m$ wget https://labfiles.example.edu/crypto/practical_2A.zip[0m
+[90mResolving labfiles.example.edu ... connected[0m
+[32mpractical_2A.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting practical_2A.zip[0m
+[90m  inflating: input.txt[0m
+[90m  inflating: config.json[0m
+[1;32mExtraction complete.[0m
+
 [1;97;42m Practical 2(A) — Shift Cipher [0m
 
 [90mdef enc(s,k): return ''.join(chr((ord(c)-65+k)%26+65) for c in s)[0m
 [2;32mdef dec(s,k): return enc(s,-k)[0m
 [37mm, k = "thiscryptosystemisnotsecure".upper(), 11[0m
 [92me = enc(m,k); print("Encrypted Message:",e); print("Decrypted Message:",dec(e,k))[0m
+
+[1;36m$ wget https://labfiles.example.edu/crypto/practical_2B.zip[0m
+[90mResolving labfiles.example.edu ... connected[0m
+[32mpractical_2B.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting practical_2B.zip[0m
+[90m  inflating: input.txt[0m
+[90m  inflating: config.json[0m
+[1;32mExtraction complete.[0m
 
 [1;97;42m Practical 2(B) — Affine Cipher [0m
 
@@ -20,11 +36,29 @@
 [2;37mm,a,b = "SANKALP",7,2[0m
 [92me = enc(m,a,b); print("Encrypted Message:",e); print("Decrypted Message:",dec(e,a,b))[0m
 
+[1;36m$ wget https://labfiles.example.edu/crypto/practical_2C.zip[0m
+[90mResolving labfiles.example.edu ... connected[0m
+[32mpractical_2C.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting practical_2C.zip[0m
+[90m  inflating: input.txt[0m
+[90m  inflating: config.json[0m
+[1;32mExtraction complete.[0m
+
 [1;97;42m Practical 2(C) — Vigenère Cipher [0m
 
 [90mdef vig(s,k,n): return ''.join(chr((ord(c)-65+n*(ord(k[i%len(k)])-65))%26+65) for i,c in enumerate(s))[0m
 [32mm,k = "thiscryptosystemisnotsecure".upper(),"CIPHER"[0m
 [2;37me = vig(m,k,1); print("Encrypted Message:",e); print("Decrypted Message:",vig(e,k,-1))[0m
+
+[1;36m$ pip install caesarcipher[0m
+[90mCollecting caesarcipher==2.0.1[0m
+[90m  Downloading caesarcipher-2.0.1.tar.gz (12 kB)[0m
+[32m     ████████████████████ 100% 12 kB  eta 0:00:00[0m
+[90mExtracting caesarcipher-2.0.1.tar.gz[0m
+[90m  Extracting caesarcipher-2.0.1/setup.py[0m
+[90m  Extracting caesarcipher-2.0.1/caesarcipher/__init__.py[0m
+[90m  Building wheel for caesarcipher (pyproject.toml) ... done[0m
+[1;32mSuccessfully installed caesarcipher-2.0.1[0m
 
 [1;97;42m Practical 3(A) — Breaking Caesar Cipher [0m
 
@@ -32,11 +66,29 @@
 [90mc = CaesarCipher("KAIFCHAUHAN", offset=10)[0m
 [32mprint(c.decipher())[0m
 
+[1;36m$ wget https://labfiles.example.edu/crypto/practical_3B.zip[0m
+[90mResolving labfiles.example.edu ... connected[0m
+[32mpractical_3B.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting practical_3B.zip[0m
+[90m  inflating: input.txt[0m
+[90m  inflating: config.json[0m
+[1;32mExtraction complete.[0m
+
 [1;97;42m Practical 3(B) — Breaking Vigenère Cipher [0m
 
 [37mdef vig(s,k,n): return ''.join(chr((ord(c)-65+n*(ord(k[i%len(k)])-65))%26+65) for i,c in enumerate(s))[0m
 [2;32mm,k = input("Message: ").upper(),input("Key: ").upper()[0m
 [2;37me = vig(m,k,1); print("Encrypted Message:",e); print("Decrypted Message:",vig(e,k,-1))[0m
+
+[1;36m$ pip install pycryptodome[0m
+[90mCollecting pycryptodome==3.20.0[0m
+[90m  Downloading pycryptodome-3.20.0.tar.gz (2.1 MB)[0m
+[32m     ████████████████████ 100% 2.1 MB  eta 0:00:00[0m
+[90mExtracting pycryptodome-3.20.0.tar.gz[0m
+[90m  Extracting pycryptodome-3.20.0/setup.py[0m
+[90m  Extracting pycryptodome-3.20.0/pycryptodome/__init__.py[0m
+[90m  Building wheel for pycryptodome (pyproject.toml) ... done[0m
+[1;32mSuccessfully installed pycryptodome-3.20.0[0m
 
 [1;97;42m Practical 4(A) — DES [0m
 
@@ -46,6 +98,16 @@
 [90me=c.encrypt(pad(m,8)); d=DES.new(k,DES.MODE_CBC,c.iv)[0m
 [2;32mprint(unpad(d.decrypt(e),8).decode())[0m
 
+[1;36m$ pip install pyAesCrypt[0m
+[90mCollecting pyAesCrypt==6.1.1[0m
+[90m  Downloading pyAesCrypt-6.1.1.tar.gz (17 kB)[0m
+[32m     ████████████████████ 100% 17 kB  eta 0:00:00[0m
+[90mExtracting pyAesCrypt-6.1.1.tar.gz[0m
+[90m  Extracting pyAesCrypt-6.1.1/setup.py[0m
+[90m  Extracting pyAesCrypt-6.1.1/pyaescrypt/__init__.py[0m
+[90m  Building wheel for pyAesCrypt (pyproject.toml) ... done[0m
+[1;32mSuccessfully installed pyAesCrypt-6.1.1[0m
+
 [1;97;42m Practical 4(B) — AES File Encryption [0m
 
 [1;90mimport pyAesCrypt[0m
@@ -54,12 +116,30 @@
 [2;32mpyAesCrypt.decryptFile("sample.txt.aes","sampleoutaes.txt",p,b)[0m
 [1;90mprint("Encryption decryption is successful.")[0m
 
+[1;36m$ pip install stegano[0m
+[90mCollecting stegano==0.11.1[0m
+[90m  Downloading stegano-0.11.1.tar.gz (24 MB)[0m
+[32m     ████████████████████ 100% 24 MB  eta 0:00:00[0m
+[90mExtracting stegano-0.11.1.tar.gz[0m
+[90m  Extracting stegano-0.11.1/setup.py[0m
+[90m  Extracting stegano-0.11.1/stegano/__init__.py[0m
+[90m  Building wheel for stegano (pyproject.toml) ... done[0m
+[1;32mSuccessfully installed stegano-0.11.1[0m
+
 [1;97;42m Practical 5 — Image Steganography [0m
 
 [92mfrom stegano import lsb[0m
 [90mm = "Hello Darling Please give me Safarchand"[0m
 [32mlsb.hide("download.png",m).save("download_new.png")[0m
 [37mprint(lsb.reveal("download_new.png"))[0m
+
+[1;36m$ wget https://labfiles.example.edu/crypto/practical_6.zip[0m
+[90mResolving labfiles.example.edu ... connected[0m
+[32mpractical_6.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting practical_6.zip[0m
+[90m  inflating: input.txt[0m
+[90m  inflating: config.json[0m
+[1;32mExtraction complete.[0m
 
 [1;97;42m Practical 6 — HMAC [0m
 
@@ -68,6 +148,16 @@
 [92mh = hmac.new(k.encode(),m.encode(),hashlib.sha512).hexdigest()[0m
 [2;37mprint(h); print(m+h)[0m
 
+[1;36m$ pip install rsa[0m
+[90mCollecting rsa==4.9[0m
+[90m  Downloading rsa-4.9.tar.gz (34 kB)[0m
+[32m     ████████████████████ 100% 34 kB  eta 0:00:00[0m
+[90mExtracting rsa-4.9.tar.gz[0m
+[90m  Extracting rsa-4.9/setup.py[0m
+[90m  Extracting rsa-4.9/rsa/__init__.py[0m
+[90m  Building wheel for rsa (pyproject.toml) ... done[0m
+[1;32mSuccessfully installed rsa-4.9[0m
+
 [1;97;42m Practical 7 — RSA [0m
 
 [32mimport rsa[0m
@@ -75,12 +165,32 @@
 [92me=rsa.encrypt(m,pub)[0m
 [2;37mprint("Encrypted:",e); print("Decrypted:",rsa.decrypt(e,priv).decode())[0m
 
+[1;36m$ pip install elgamal[0m
+[90mCollecting elgamal==0.1.2[0m
+[90m  Downloading elgamal-0.1.2.tar.gz (9 kB)[0m
+[32m     ████████████████████ 100% 9 kB  eta 0:00:00[0m
+[90mExtracting elgamal-0.1.2.tar.gz[0m
+[90m  Extracting elgamal-0.1.2/setup.py[0m
+[90m  Extracting elgamal-0.1.2/elgamal/__init__.py[0m
+[90m  Building wheel for elgamal (pyproject.toml) ... done[0m
+[1;32mSuccessfully installed elgamal-0.1.2[0m
+
 [1;97;42m Practical 8(A) — ElGamal [0m
 
 [1;32mfrom elgamal.elgamal import Elgamal[0m
 [1;90mm=b"triocodelab"; pub,priv=Elgamal.newkeys(16)[0m
 [2;32me=Elgamal.encrypt(m,pub)[0m
 [90mprint("Encrypted:",e); print("Decrypted:",Elgamal.decrypt(e,priv))[0m
+
+[1;36m$ pip install ecdsa[0m
+[90mCollecting ecdsa==0.19.0[0m
+[90m  Downloading ecdsa-0.19.0.tar.gz (150 kB)[0m
+[32m     ████████████████████ 100% 150 kB  eta 0:00:00[0m
+[90mExtracting ecdsa-0.19.0.tar.gz[0m
+[90m  Extracting ecdsa-0.19.0/setup.py[0m
+[90m  Extracting ecdsa-0.19.0/ecdsa/__init__.py[0m
+[90m  Building wheel for ecdsa (pyproject.toml) ... done[0m
+[1;32mSuccessfully installed ecdsa-0.19.0[0m
 
 [1;97;42m Practical 8(B) — ECC [0m
 
