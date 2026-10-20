@@ -1,4 +1,4 @@
-[1;97;42m Practical 1 — Password Salting and Hashing [0m
+[1;97;42m  1 — Password Salting and Hashing [0m
 
 [1;32mimport bcrypt[0m
 [37mpw = b"Anil"; s = bcrypt.gensalt()[0m
@@ -6,45 +6,45 @@
 [1;90mprint("Salt:", s); print("Hashed Password:", h)[0m
 [32mprint("Password matches!" if bcrypt.checkpw(pw, h) else "Invalid password!")[0m
 
-[1;36m$ wget https://labfiles.example.edu/crypto/practical_2A.zip[0m
+[1;36m$ wget https://labfiles.example.edu/crypto/_2A.zip[0m
 [90mResolving labfiles.example.edu ... connected[0m
-[32mpractical_2A.zip  ████████████████████ 100%  48 kB  eta 0s[0m
-[90mExtracting practical_2A.zip[0m
+[32m_2A.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting _2A.zip[0m
 [90m  inflating: input.txt[0m
 [90m  inflating: config.json[0m
 [1;32mExtraction complete.[0m
 
-[1;97;42m Practical 2(A) — Shift Cipher [0m
+[1;97;42m  2(A) — Shift Cipher [0m
 
 [90mdef enc(s,k): return ''.join(chr((ord(c)-65+k)%26+65) for c in s)[0m
 [2;32mdef dec(s,k): return enc(s,-k)[0m
 [37mm, k = "thiscryptosystemisnotsecure".upper(), 11[0m
 [92me = enc(m,k); print("Encrypted Message:",e); print("Decrypted Message:",dec(e,k))[0m
 
-[1;36m$ wget https://labfiles.example.edu/crypto/practical_2B.zip[0m
+[1;36m$ wget https://labfiles.example.edu/crypto/_2B.zip[0m
 [90mResolving labfiles.example.edu ... connected[0m
-[32mpractical_2B.zip  ████████████████████ 100%  48 kB  eta 0s[0m
-[90mExtracting practical_2B.zip[0m
+[32m_2B.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting _2B.zip[0m
 [90m  inflating: input.txt[0m
 [90m  inflating: config.json[0m
 [1;32mExtraction complete.[0m
 
-[1;97;42m Practical 2(B) — Affine Cipher [0m
+[1;97;42m  2(B) — Affine Cipher [0m
 
 [1;90mdef enc(s,a,b): return ''.join(chr(((a*(ord(c)-65)+b)%26)+65) for c in s)[0m
 [32mdef dec(s,a,b): return enc(s,pow(a,-1,26),(-b*pow(a,-1,26))%26)[0m
 [2;37mm,a,b = "SANKALP",7,2[0m
 [92me = enc(m,a,b); print("Encrypted Message:",e); print("Decrypted Message:",dec(e,a,b))[0m
 
-[1;36m$ wget https://labfiles.example.edu/crypto/practical_2C.zip[0m
+[1;36m$ wget https://labfiles.example.edu/crypto/_2C.zip[0m
 [90mResolving labfiles.example.edu ... connected[0m
-[32mpractical_2C.zip  ████████████████████ 100%  48 kB  eta 0s[0m
-[90mExtracting practical_2C.zip[0m
+[32m_2C.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting _2C.zip[0m
 [90m  inflating: input.txt[0m
 [90m  inflating: config.json[0m
 [1;32mExtraction complete.[0m
 
-[1;97;42m Practical 2(C) — Vigenère Cipher [0m
+[1;97;42m  2(C) — Vigenère Cipher [0m
 
 [90mdef vig(s,k,n): return ''.join(chr((ord(c)-65+n*(ord(k[i%len(k)])-65))%26+65) for i,c in enumerate(s))[0m
 [32mm,k = "thiscryptosystemisnotsecure".upper(),"CIPHER"[0m
@@ -60,21 +60,21 @@
 [90m  Building wheel for caesarcipher (pyproject.toml) ... done[0m
 [1;32mSuccessfully installed caesarcipher-2.0.1[0m
 
-[1;97;42m Practical 3(A) — Breaking Caesar Cipher [0m
+[1;97;42m  3(A) — Breaking Caesar Cipher [0m
 
 [1;32mfrom caesarcipher import CaesarCipher[0m
 [90mc = CaesarCipher("KAIFCHAUHAN", offset=10)[0m
 [32mprint(c.decipher())[0m
 
-[1;36m$ wget https://labfiles.example.edu/crypto/practical_3B.zip[0m
+[1;36m$ wget https://labfiles.example.edu/crypto/_3B.zip[0m
 [90mResolving labfiles.example.edu ... connected[0m
-[32mpractical_3B.zip  ████████████████████ 100%  48 kB  eta 0s[0m
-[90mExtracting practical_3B.zip[0m
+[32m_3B.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting _3B.zip[0m
 [90m  inflating: input.txt[0m
 [90m  inflating: config.json[0m
 [1;32mExtraction complete.[0m
 
-[1;97;42m Practical 3(B) — Breaking Vigenère Cipher [0m
+[1;97;42m  3(B) — Breaking Vigenère Cipher [0m
 
 [37mdef vig(s,k,n): return ''.join(chr((ord(c)-65+n*(ord(k[i%len(k)])-65))%26+65) for i,c in enumerate(s))[0m
 [2;32mm,k = input("Message: ").upper(),input("Key: ").upper()[0m
@@ -90,7 +90,7 @@
 [90m  Building wheel for pycryptodome (pyproject.toml) ... done[0m
 [1;32mSuccessfully installed pycryptodome-3.20.0[0m
 
-[1;97;42m Practical 4(A) — DES [0m
+[1;97;42m  4(A) — DES [0m
 
 [32mfrom Crypto.Cipher import DES[0m
 [1;90mfrom Crypto.Util.Padding import pad,unpad[0m
@@ -108,7 +108,7 @@
 [90m  Building wheel for pyAesCrypt (pyproject.toml) ... done[0m
 [1;32mSuccessfully installed pyAesCrypt-6.1.1[0m
 
-[1;97;42m Practical 4(B) — AES File Encryption [0m
+[1;97;42m  4(B) — AES File Encryption [0m
 
 [1;90mimport pyAesCrypt[0m
 [1;32mb,p = 128*1024,"XIRIVY"[0m
@@ -126,22 +126,22 @@
 [90m  Building wheel for stegano (pyproject.toml) ... done[0m
 [1;32mSuccessfully installed stegano-0.11.1[0m
 
-[1;97;42m Practical 5 — Image Steganography [0m
+[1;97;42m  5 — Image Steganography [0m
 
 [92mfrom stegano import lsb[0m
 [90mm = "Hello Darling Please give me Safarchand"[0m
 [32mlsb.hide("download.png",m).save("download_new.png")[0m
 [37mprint(lsb.reveal("download_new.png"))[0m
 
-[1;36m$ wget https://labfiles.example.edu/crypto/practical_6.zip[0m
+[1;36m$ wget https://labfiles.example.edu/crypto/_6.zip[0m
 [90mResolving labfiles.example.edu ... connected[0m
-[32mpractical_6.zip  ████████████████████ 100%  48 kB  eta 0s[0m
-[90mExtracting practical_6.zip[0m
+[32m_6.zip  ████████████████████ 100%  48 kB  eta 0s[0m
+[90mExtracting _6.zip[0m
 [90m  inflating: input.txt[0m
 [90m  inflating: config.json[0m
 [1;32mExtraction complete.[0m
 
-[1;97;42m Practical 6 — HMAC [0m
+[1;97;42m  6 — HMAC [0m
 
 [2;32mimport hmac,hashlib[0m
 [90mm,k = "anil is best","Secret Key"[0m
@@ -158,7 +158,7 @@
 [90m  Building wheel for rsa (pyproject.toml) ... done[0m
 [1;32mSuccessfully installed rsa-4.9[0m
 
-[1;97;42m Practical 7 — RSA [0m
+[1;97;42m  7 — RSA [0m
 
 [32mimport rsa[0m
 [1;90mpub,priv = rsa.newkeys(512); m=b"hello from anil!"[0m
@@ -175,7 +175,7 @@
 [90m  Building wheel for elgamal (pyproject.toml) ... done[0m
 [1;32mSuccessfully installed elgamal-0.1.2[0m
 
-[1;97;42m Practical 8(A) — ElGamal [0m
+[1;97;42m  8(A) — ElGamal [0m
 
 [1;32mfrom elgamal.elgamal import Elgamal[0m
 [1;90mm=b"triocodelab"; pub,priv=Elgamal.newkeys(16)[0m
@@ -192,7 +192,7 @@
 [90m  Building wheel for ecdsa (pyproject.toml) ... done[0m
 [1;32mSuccessfully installed ecdsa-0.19.0[0m
 
-[1;97;42m Practical 8(B) — ECC [0m
+[1;97;42m  8(B) — ECC [0m
 
 [32mfrom ecdsa import SigningKey,SECP256k1[0m
 [1;90mp=SigningKey.generate(curve=SECP256k1); q=p.verifying_key[0m
