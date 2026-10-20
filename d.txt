@@ -1,618 +1,90 @@
-[1;92mStep 1:[0m
-[32m>: curl -L -o install.sh https://raw.githubusercontent.com/web3prac/install/main/install.sh[0m
+[1;97;42m Practical 1 — Password Salting and Hashing [0m
 
-[90mStep 2:[0m
-[1;32m>: bash install.sh[0m
+[1;32mimport bcrypt[0m
+[37mpw = b"Anil"; s = bcrypt.gensalt()[0m
+[92mh = bcrypt.hashpw(pw, s)[0m
+[1;90mprint("Salt:", s); print("Hashed Password:", h)[0m
+[32mprint("Password matches!" if bcrypt.checkpw(pw, h) else "Invalid password!")[0m
 
+[1;97;42m Practical 2(A) — Shift Cipher [0m
 
-[37m================================================================================[0m
-[32m PRACTICAL 1 - Install Docker, Node.js, Java, Hyperledger Fabric, Ethereum [0m
-[90m================================================================================[0m
-[37m# Self-contained. Copy each command block into Ubuntu (WSL) terminal.[0m
-[1;90m# Lines starting with "#" are comments and can be pasted as-is.[0m
+[90mdef enc(s,k): return ''.join(chr((ord(c)-65+k)%26+65) for c in s)[0m
+[2;32mdef dec(s,k): return enc(s,-k)[0m
+[37mm, k = "thiscryptosystemisnotsecure".upper(), 11[0m
+[92me = enc(m,k); print("Encrypted Message:",e); print("Decrypted Message:",dec(e,k))[0m
 
+[1;97;42m Practical 2(B) — Affine Cipher [0m
 
-[90m # --- DOCKER (GUI + WSL) ------------------------------------------------------- [0m
+[1;90mdef enc(s,a,b): return ''.join(chr(((a*(ord(c)-65)+b)%26)+65) for c in s)[0m
+[32mdef dec(s,a,b): return enc(s,pow(a,-1,26),(-b*pow(a,-1,26))%26)[0m
+[2;37mm,a,b = "SANKALP",7,2[0m
+[92me = enc(m,a,b); print("Encrypted Message:",e); print("Decrypted Message:",dec(e,a,b))[0m
 
-[97m1. Sign in at https://hub.docker.com/ and create a repository named "web3".[0m
+[1;97;42m Practical 2(C) — Vigenère Cipher [0m
 
-[37m2. Install Docker Desktop on Windows:[0m
-[90m#    https://www.docker.com/products/docker-desktop/[0m
-[2;37m#    Then enable WSL integration: Settings > Resources > WSL Integration.[0m
+[90mdef vig(s,k,n): return ''.join(chr((ord(c)-65+n*(ord(k[i%len(k)])-65))%26+65) for i,c in enumerate(s))[0m
+[32mm,k = "thiscryptosystemisnotsecure".upper(),"CIPHER"[0m
+[2;37me = vig(m,k,1); print("Encrypted Message:",e); print("Decrypted Message:",vig(e,k,-1))[0m
 
-[92m3. Check Docker is available in WSL:[0m
-[37m>: docker --version[0m
+[1;97;42m Practical 3(A) — Breaking Caesar Cipher [0m
 
-[90m4. Pull an image and list images:[0m
-[2;37m>: docker pull busybox[0m
-[2;90m  â”‚ [0m[36mPulling busybox ...[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading layers ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading layers ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading layers ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[97m>: docker images[0m
+[1;32mfrom caesarcipher import CaesarCipher[0m
+[90mc = CaesarCipher("KAIFCHAUHAN", offset=10)[0m
+[32mprint(c.decipher())[0m
 
-[32m5. Log in to Docker Hub (use YOUR username):[0m
-[37m>: docker login -u anilastage1[0m
+[1;97;42m Practical 3(B) — Breaking Vigenère Cipher [0m
 
-[90m6. Tag the image and push it to your repository:[0m
-[2;37m>: docker tag busybox:latest anilastage1/w1:latest[0m
-[32m>: docker push anilastage1/w1:latest[0m
+[37mdef vig(s,k,n): return ''.join(chr((ord(c)-65+n*(ord(k[i%len(k)])-65))%26+65) for i,c in enumerate(s))[0m
+[2;32mm,k = input("Message: ").upper(),input("Key: ").upper()[0m
+[2;37me = vig(m,k,1); print("Encrypted Message:",e); print("Decrypted Message:",vig(e,k,-1))[0m
 
+[1;97;42m Practical 4(A) — DES [0m
 
-[90m # --- NODE.JS (official bundle, includes npm) ---------------------------------- [0m
+[32mfrom Crypto.Cipher import DES[0m
+[1;90mfrom Crypto.Util.Padding import pad,unpad[0m
+[92mk,m = b"8Charkey",b"secret message"; c=DES.new(k,DES.MODE_CBC)[0m
+[90me=c.encrypt(pad(m,8)); d=DES.new(k,DES.MODE_CBC,c.iv)[0m
+[2;32mprint(unpad(d.decrypt(e),8).decode())[0m
 
-[37m7. Install Node.js 18:[0m
-[1;90m>: cd ~ && curl -O https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.xz && mkdir -p ~/node18 && tar xf node-v18.20.8-linux-x64.tar.xz -C ~/node18 --strip-components=1 && rm -f node-v18.20.8-linux-x64.tar.xz[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[97m>: echo 'export PATH="$HOME/node18/bin:$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc[0m
-[2;32m>: source ~/.bashrc[0m
-[1;90m>: npm config set prefix "$HOME/.npm-global"[0m
-[90m>: node -v && npm -v[0m
+[1;97;42m Practical 4(B) — AES File Encryption [0m
 
+[1;90mimport pyAesCrypt[0m
+[1;32mb,p = 128*1024,"XIRIVY"[0m
+[90mpyAesCrypt.encryptFile("sample.txt","sample.txt.aes",p,b)[0m
+[2;32mpyAesCrypt.decryptFile("sample.txt.aes","sampleoutaes.txt",p,b)[0m
+[1;90mprint("Encryption decryption is successful.")[0m
 
-[2;37m # --- NODE.JS HTTP SERVER ------------------------------------------------------ [0m
+[1;97;42m Practical 5 — Image Steganography [0m
 
-[37m8. Create myfirst.js:[0m
-[32m>: cat > myfirst.js << 'EOF'[0m
-[92mvar http = require('http');[0m
-[1;32mhttp.createServer(function (req, res) {[0m
-[32m  res.writeHead(200, {'Content-Type': 'text/html'});[0m
-[2;32m  res.end("Hello World ");[0m
-[92m}).listen(8081);[0m
-[90mEOF[0m
+[92mfrom stegano import lsb[0m
+[90mm = "Hello Darling Please give me Safarchand"[0m
+[32mlsb.hide("download.png",m).save("download_new.png")[0m
+[37mprint(lsb.reveal("download_new.png"))[0m
 
-[2;37m9. Run it, then open http://localhost:8081/ in the browser:[0m
-[37m>: node myfirst.js[0m
+[1;97;42m Practical 6 — HMAC [0m
 
+[2;32mimport hmac,hashlib[0m
+[90mm,k = "anil is best","Secret Key"[0m
+[92mh = hmac.new(k.encode(),m.encode(),hashlib.sha512).hexdigest()[0m
+[2;37mprint(h); print(m+h)[0m
 
-[90m # --- NODE.JS MODULE ----------------------------------------------------------- [0m
+[1;97;42m Practical 7 — RSA [0m
 
-[97m10. Create myfirstmodule.js:[0m
-[92m>: cat > myfirstmodule.js << 'EOF'[0m
-[2;32mexports.myDateTime = function () { return Date(); };[0m
-[1;92mEOF[0m
+[32mimport rsa[0m
+[1;90mpub,priv = rsa.newkeys(512); m=b"hello from anil!"[0m
+[92me=rsa.encrypt(m,pub)[0m
+[2;37mprint("Encrypted:",e); print("Decrypted:",rsa.decrypt(e,priv).decode())[0m
 
-[32m11. Create datetime.js:[0m
-[2;37m>: cat > datetime.js << 'EOF'[0m
-[97mvar http = require('http');[0m
-[37mvar dt = require('./myfirstmodule');[0m
-[92mhttp.createServer(function (req, res) {[0m
-[90m  res.writeHead(200, {'Content-Type': 'text/html'});[0m
-[1;90m  res.write("The date and time are currently: " + dt.myDateTime());[0m
-[2;37m  res.end();[0m
-[90m}).listen(8081);[0m
-[2;32mEOF[0m
+[1;97;42m Practical 8(A) — ElGamal [0m
 
-[1;92m12. Run it:[0m
-[32m>: node datetime.js[0m
+[1;32mfrom elgamal.elgamal import Elgamal[0m
+[1;90mm=b"triocodelab"; pub,priv=Elgamal.newkeys(16)[0m
+[2;32me=Elgamal.encrypt(m,pub)[0m
+[90mprint("Encrypted:",e); print("Decrypted:",Elgamal.decrypt(e,priv))[0m
 
+[1;97;42m Practical 8(B) — ECC [0m
 
-[90m # --- JAVA --------------------------------------------------------------------- [0m
-
-[2;37m13. Install Java and check the version:[0m
-[32m>: sudo apt update && sudo apt install -y default-jdk[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[1;32m>: java -version && javac -version[0m
-
-
-[2;32m # --- HYPERLEDGER FABRIC (samples + binaries + docker images) ------------------- [0m
-
-[97m14. Download and run the Fabric installer, then check the peer binary:[0m
-[1;92m>: mkdir -p ~/fabric && cd ~/fabric && curl -fSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh && ./install-fabric.sh docker samples binary[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[1;32m>: ./bin/peer version[0m
-
-
-[2;37m # --- ETHEREUM (geth) ---------------------------------------------------------- [0m
-
-[2;32m15. Install geth from the Ethereum PPA and check the version:[0m
-[90m>: sudo add-apt-repository -y ppa:ethereum/ethereum[0m
-[1;90m>: sudo apt update && sudo apt install -y geth[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[2;37m>: geth version[0m
-
-
-[2;32m================================================================================[0m
-[32m PRACTICAL 2 - Blockchain network using Hyperledger Fabric (SDK for Java) [0m
-[37m================================================================================[0m
-[1;32m# Self-contained. Copy each command block into Ubuntu (WSL) terminal.[0m
-
-
-[1;92m1. Install prerequisites:[0m
-[90m>: sudo apt update && sudo apt install -y curl wget git jq golang-go default-jdk maven docker.io unzip[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[1;32m2. Git settings (needed on Windows + WSL for long paths / line endings):[0m
-[1;92m>: git config --global core.longpaths true[0m
-[92m>: git config --global core.autocrlf false[0m
-
-[90m3. Download the Fabric samples and binaries:[0m
-[2;37m>: mkdir -p ~/fabric && cd ~/fabric && curl -fSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh && ./install-fabric.sh docker samples binary[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-
-[2;32m # --- BASIC NETWORK ------------------------------------------------------------ [0m
-
-[90m4. Start the test network and create a channel:[0m
-[37m>: cd ~/fabric/fabric-samples/test-network[0m
-[2;32m>: ./network.sh down[0m
-[1;90m>: ./network.sh up createChannel[0m
-
-[2;37m5. Tear the network down:[0m
-[1;92m>: ./network.sh down[0m
-
-
-[97m # --- JAVA CHAINCODE + JAVA APPLICATION ---------------------------------------- [0m
-
-[92m6. Start the network with Certificate Authorities:[0m
-[37m>: cd ~/fabric/fabric-samples/test-network[0m
-[2;32m>: ./network.sh up createChannel -ca[0m
-
-[2;37m7. Deploy the Java asset-transfer chaincode:[0m
-[37m#    (the first build downloads Gradle + dependencies, so it can take 10-20 min)[0m
-[90m>: ./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-java/ -ccl java[0m
-
-[97m8. Run the Java application:[0m
-[32m>: cd ~/fabric/fabric-samples/asset-transfer-basic/application-gateway-java[0m
-[90m>: ./gradlew run[0m
-
-[1;32m9. Clean up:[0m
-[1;92m>: cd ~/fabric/fabric-samples/test-network[0m
-[90m>: ./network.sh down[0m
-
-
-[37m================================================================================[0m
-[1;90m PRACTICAL 3 - Interact with a blockchain network (Geth private chain) [0m
-[2;37m================================================================================[0m
-[97m# Self-contained. Copy each command block into Ubuntu (WSL) terminal.[0m
-[1;90m# Uses 4 terminals: node0, node1, and one geth console per node.[0m
-
-
-[37m # --- INSTALL GETH 1.11.6 ------------------------------------------------------ [0m
-[92m# (apt/PPA geth is too new to mine a private chain)[0m
-
-[32m1. Download and install geth 1.11.6:[0m
-[1;32m>: cd ~ && curl -O https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.11.6-ea9e62ca.tar.gz && tar xzf geth-linux-amd64-1.11.6-ea9e62ca.tar.gz && mkdir -p ~/geth1116 && mv geth-linux-amd64-1.11.6-ea9e62ca/geth ~/geth1116/ && rm -rf geth-linux-amd64-1.11.6-ea9e62ca*[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[1;92m>: echo 'export PATH="$HOME/geth1116:$PATH"' >> ~/.bashrc[0m
-[90m>: source ~/.bashrc[0m
-[92m>: geth version | head -3[0m
-
-
-[97m # --- CREATE NODES AND ACCOUNTS ------------------------------------------------ [0m
-
-[1;32m2. Create two data directories and two accounts:[0m
-[2;32m>: mkdir -p ~/privatetest && cd ~/privatetest && mkdir -p node0 node1 && echo "" > pw.txt[0m
-[1;92m>: geth --datadir ./node0 account new --password pw.txt[0m
-[37m>: geth --datadir ./node1 account new --password pw.txt[0m
-[32m# Copy the two addresses printed above (call them NODE0_ADDRESS, NODE1_ADDRESS).[0m
-
-[92m3. Create the genesis block file:[0m
-[1;90m>: cat > genesis.json <<'EOF'[0m
-[90m{[0m
-[2;32m  "config": {[0m
-[92m    "chainId": 1234,[0m
-[32m    "homesteadBlock": 0,[0m
-[1;92m    "eip150Block": 0,[0m
-[1;32m    "eip155Block": 0,[0m
-[2;32m    "eip158Block": 0,[0m
-[2;37m    "byzantiumBlock": 0,[0m
-[97m    "constantinopleBlock": 0,[0m
-[37m    "petersburgBlock": 0,[0m
-[32m    "ethash": {}[0m
-[1;90m  },[0m
-[2;37m  "difficulty": "4",[0m
-[90m  "gasLimit": "8000000",[0m
-[2;32m  "alloc": {}[0m
-[97m}[0m
-[37mEOF[0m
-
-[90m4. Initialise both nodes with the genesis block:[0m
-[1;92m>: geth --datadir ./node0 init genesis.json[0m
-[97m>: geth --datadir ./node1 init genesis.json[0m
-
-
-[1;90m # --- START THE TWO NODES (one terminal each) ---------------------------------- [0m
-
-[92m5. TERMINAL 1 - start node0:[0m
-[1;32m>: cd ~/privatetest[0m
-[1;90m>: geth --datadir ./node0 --networkid 1234 --http --http.addr 127.0.0.1 --http.port 8545 --http.api personal,db,eth,net --ws --ws.addr 127.0.0.1 --ws.port 8546 --port 30303 --authrpc.port 8551 --allow-insecure-unlock --nodiscover[0m
-
-[1;92m6. TERMINAL 2 - start node1:[0m
-[32m>: cd ~/privatetest[0m
-[1;32m>: geth --syncmode full --datadir ./node1 --networkid 1234 --http --http.addr 127.0.0.2 --http.port 8547 --http.api personal,db,eth,net --ws --ws.addr 127.0.0.2 --ws.port 8548 --port 30304 --authrpc.port 8552 --allow-insecure-unlock --nodiscover[0m
-
-
-[1;90m # --- OPEN THE CONSOLES (one terminal each) ------------------------------------ [0m
-
-[92m7. TERMINAL 3 - attach to node0:[0m
-[32m>: cd ~/privatetest[0m
-[1;32m>: geth attach ./node0/geth.ipc[0m
-
-[92m8. TERMINAL 4 - attach to node1:[0m
-[2;32m>: cd ~/privatetest[0m
-[90m>: geth attach ./node1/geth.ipc[0m
-
-
-[1;90m # --- CONNECT THE NODES AND MINE (inside the consoles) ------------------------- [0m
-
-[37m9. In TERMINAL 4 (node1 console) - print its enode, then copy the whole string:[0m
-[1;32madmin.nodeInfo.enode[0m
-
-[2;37m10. In TERMINAL 3 (node0 console) - add node1 as a peer:[0m
-[32madmin.addPeer("enode://<node1-public-key>@127.0.0.1:30304")[0m
-[90madmin.peers.length[0m
-
-[92m11. In TERMINAL 3 (node0 console) - set the mining account and start mining:[0m
-[1;92mminer.setEtherbase('0x<NODE0_ADDRESS>')[0m
-[1;32mminer.start()[0m
-[2;37meth.blockNumber[0m
-[97meth.getBalance('0x<NODE0_ADDRESS>')[0m
-[90mminer.stop()[0m
-
-[37m12. In TERMINAL 4 (node1 console) - verify it synced node0's chain:[0m
-[92meth.blockNumber[0m
-[97meth.getBalance('0x<NODE0_ADDRESS>')[0m
-
-
-[1;90m================================================================================[0m
-[1;32m PRACTICAL 4 - Deploy an asset-transfer app (Hyperledger Fabric ABAC) [0m
-[92mAim: Deploy an asset-transfer app using blockchain; learn app development[0m
-[1;90m     within a Hyperledger Fabric network.[0m
-[37m================================================================================[0m
-[32m# Self-contained. Copy each command block into Ubuntu (WSL) terminal.[0m
-
-
-[1;32m1. Install prerequisites:[0m
-[1;90m>: sudo apt update && sudo apt install -y curl wget git jq golang-go default-jdk maven docker.io unzip[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[1;92m2. Download the Fabric samples and binaries:[0m
-[90m>: git config --global core.longpaths true[0m
-[1;90m>: git config --global core.autocrlf false[0m
-[1;92m>: mkdir -p ~/fabric && cd ~/fabric && curl -fSLO https://raw.githubusercontent.com/hyperledger/fabric/main/scripts/install-fabric.sh && chmod +x install-fabric.sh && ./install-fabric.sh docker samples binary[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mFabric samples, binaries and docker images ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[32m3. Start the network with Certificate Authorities and deploy the chaincode:[0m
-[92m>: cd ~/fabric/fabric-samples/test-network[0m
-[1;32m>: ./network.sh down[0m
-[37m>: ./network.sh up createChannel -ca[0m
-[2;37m>: ./network.sh deployCC -ccn abac -ccp ../asset-transfer-abac/chaincode-go/ -ccl go[0m
-
-[1;92m4. Set the environment variables:[0m
-[32m>: export PATH=${PWD}/../bin:${PWD}:$PATH[0m
-[92m>: export FABRIC_CFG_PATH=$PWD/../config/[0m
-[1;92m>: export FABRIC_CA_CLIENT_HOME=${PWD}/organizations/peerOrganizations/org1.example.com/[0m
-
-[97m5. Register and enroll creator1 (attribute added at enrollment):[0m
-[2;37m>: fabric-ca-client register --id.name creator1 --id.secret creator1pw --id.type client --id.affiliation org1 --id.attrs 'abac.creator=true:ecert' --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"[0m
-
-[1;90m>: fabric-ca-client enroll -u https://creator1:creator1pw@localhost:7054 --caname ca-org1 -M "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator1@org1.example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"[0m
-
-[97m>: cp "${PWD}/organizations/peerOrganizations/org1.example.com/msp/config.yaml" "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator1@org1.example.com/msp/config.yaml"[0m
-
-[37m6. Register and enroll creator2 (attribute requested at enrollment):[0m
-[2;37m>: fabric-ca-client register --id.name creator2 --id.secret creator2pw --id.type client --id.affiliation org1 --id.attrs 'abac.creator=true:' --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"[0m
-
-[97m>: fabric-ca-client enroll -u https://creator2:creator2pw@localhost:7054 --caname ca-org1 --enrollment.attrs "abac.creator" -M "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator2@org1.example.com/msp" --tls.certfiles "${PWD}/organizations/fabric-ca/org1/tls-cert.pem"[0m
-
-[32m>: cp "${PWD}/organizations/peerOrganizations/org1.example.com/msp/config.yaml" "${PWD}/organizations/peerOrganizations/org1.example.com/users/creator2@org1.example.com/msp/config.yaml"[0m
-
-[90m7. Set creator1 as the client and prepare the TLS options:[0m
-[1;32m>: export CORE_PEER_TLS_ENABLED=true[0m
-[2;37m>: export CORE_PEER_LOCALMSPID=Org1MSP[0m
-[2;32m>: export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/creator1@org1.example.com/msp[0m
-[1;92m>: export CORE_PEER_TLS_ROOTCERT_FILE=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt[0m
-[2;37m>: export CORE_PEER_ADDRESS=localhost:7051[0m
-[97m>: export TARGET_TLS_OPTIONS=(-o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem" --peerAddresses localhost:7051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt" --peerAddresses localhost:9051 --tlsRootCertFiles "${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt")[0m
-
-[37m8. Create an asset and read it:[0m
-[1;92m>: peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"CreateAsset","Args":["Asset40","black","20","30"]}'[0m
-[2;37m>: peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset40"]}'[0m
-
-[32m9. Transfer the asset to User1:[0m
-[1;92m#    (wait a few seconds after each invoke before the next query/step)[0m
-[1;90m>: export RECIPIENT="x509::CN=user1,OU=client,O=Hyperledger,ST=North Carolina,C=US::CN=ca.org1.example.com,O=org1.example.com,L=Durham,ST=North Carolina,C=US"[0m
-[90m>: peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"TransferAsset","Args":["Asset40","'"$RECIPIENT"'"]}'[0m
-[37m>: sleep 2[0m
-[2;32m>: peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset40"]}'[0m
-
-[2;37m10. Update the asset - first as creator1 (fails, not the owner):[0m
-[37m>: peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"UpdateAsset","Args":["Asset40","green","20","30"]}'[0m
-
-[1;92m11. Switch to the owner User1 and update again:[0m
-[2;32m>: export CORE_PEER_MSPCONFIGPATH=${PWD}/organizations/peerOrganizations/org1.example.com/users/User1@org1.example.com/msp[0m
-[1;32m>: peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"UpdateAsset","Args":["Asset40","green","20","30"]}'[0m
-[1;92m>: peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset40"]}'[0m
-
-[90m12. Delete the asset and verify:[0m
-[1;90m>: peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"DeleteAsset","Args":["Asset40"]}'[0m
-[1;92m>: peer chaincode query -C mychannel -n abac -c '{"function":"ReadAsset","Args":["Asset40"]}'[0m
-
-[92m13. Creating again as User1 (no abac.creator attribute) should fail:[0m
-[2;32m>: peer chaincode invoke "${TARGET_TLS_OPTIONS[@]}" -C mychannel -n abac -c '{"function":"CreateAsset","Args":["Asset40","green","20","30"]}'[0m
-
-[32m14. Clean up:[0m
-[1;92m>: ./network.sh down[0m
-
-
-[90m================================================================================[0m
-[32m PRACTICAL 5 - Car auction / FabCar app with Hyperledger Fabric Node SDK [0m
-[92mAim: Car auction network - a Hello World example with Hyperledger Fabric[0m
-[1;92m     Node SDK and IBM Blockchain Starter Plan.[0m
-[2;32m================================================================================[0m
-[2;37m# Self-contained. Copy each command block into Ubuntu (WSL) terminal.[0m
-[32m#[0m
-[37m# WHY 1.4.4: the current fabric-samples NO LONGER contains "first-network" or[0m
-[2;37m# "fabcar" (they were removed in later releases). Only the old 1.4.x samples[0m
-[1;90m# have them, so the 1.4.4 bootstrap is required for this practical.[0m
-[90m#[0m
-[97m# WARNING: the 1.4.4 bootstrap retags the Fabric ":latest" docker images to[0m
-[1;90m1.4.4, which BREAKS the modern network used in Practicals 2 and 4. Run the[0m
-[1;32m# RESTORE step at the end (or run this practical before P2/P4).[0m
-[1;92m#[0m
-[90m# The old 1.4.4 chaincode setup is a bit flaky. If "instantiate" fails with[0m
-[1;90m# "could not send to orderer node: EOF", just rerun ./startFabric.sh javascript.[0m
-
-
-[1;32m1. Install prerequisites:[0m
-[2;32m>: sudo apt update && sudo apt install -y curl wget git docker.io[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[97m2. Create a dedicated folder and download the Fabric 1.4.4 samples + binaries:[0m
-[1;90m#    (must be an EMPTY folder - the script clones fabric-samples into the cwd)[0m
-[1;92m>: mkdir -p ~/fabcar144 && cd ~/fabcar144[0m
-[37m>: curl -sSL http://bit.ly/2ysbOFE | bash -s 1.4.4[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[92m3. Use the 1.4.4 Certificate Authority (so it matches the 1.4 Node SDK):[0m
-[2;32m>: docker pull hyperledger/fabric-ca:1.4.4[0m
-[2;90m  â”‚ [0m[36mPulling hyperledger/fabric-ca:1.4.4 ...[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading layers ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading layers ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading layers ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[32m>: docker tag hyperledger/fabric-ca:1.4.4 hyperledger/fabric-ca:latest[0m
-
-[1;32m4. Stop the old first-network and clean old FabCar containers/images:[0m
-[90m>: cd ~/fabcar144/fabric-samples/first-network[0m
-[1;90m>: ./byfn.sh down[0m
-[37m>: docker rm -f $(docker ps -aq)[0m
-[1;32m>: docker rmi -f $(docker images | grep fabcar | awk '{print $3}')[0m
-
-[90m5. Start the FabCar network (JavaScript):[0m
-[32m>: cd ~/fabcar144/fabric-samples/fabcar[0m
-[1;92m>: ./startFabric.sh javascript[0m
-
-[1;90m6. Install the Node dependencies:[0m
-[90m>: cd javascript[0m
-[92m>: npm install[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[1;32m7. Reset the wallet, enroll the admin, and register a user:[0m
-[2;32m>: rm -rf wallet[0m
-[1;92m>: node enrollAdmin.js[0m
-[97m>: node registerUser.js[0m
-
-[2;32m8. Query the ledger:[0m
-[90m>: node query.js[0m
-[1;92m#    Open query.js in nano, set the query to CAR4, save, and query again:[0m
-[1;32m>: nano query.js[0m
-[1;90m#    const result = await contract.evaluateTransaction('queryCar', 'CAR4');[0m
-[97m>: node query.js[0m
-[1;32m#    Now change 'CAR4' to 'CAR12', save, and query again:[0m
-[1;92m>: nano query.js[0m
-[32m>: node query.js[0m
-
-[37m9. Update the ledger (change the car owner):[0m
-[2;32m>: nano invoke.js[0m
-[32m#    await contract.submitTransaction('changeCarOwner', 'CAR12', 'Dave');[0m
-[2;37m>: node invoke.js[0m
-[1;32m>: node query.js[0m
-
-
-[37m # --- RESTORE the "latest" tags for the modern network (P2/P4) ----------------- [0m
-[1;90m>: docker tag hyperledger/fabric-peer:2.5.16    hyperledger/fabric-peer:latest[0m
-[1;32m>: docker tag hyperledger/fabric-orderer:2.5.16 hyperledger/fabric-orderer:latest[0m
-[92m>: docker tag hyperledger/fabric-ccenv:2.5.16   hyperledger/fabric-ccenv:latest[0m
-[2;32m>: docker tag hyperledger/fabric-baseos:2.5.16  hyperledger/fabric-baseos:latest[0m
-[1;92m>: docker tag hyperledger/fabric-ca:1.5.17      hyperledger/fabric-ca:latest[0m
-
-
-[92m================================================================================[0m
-[32m PRACTICAL 6 - Voting dApp with Solidity (Remix) - GUI [0m
-[1;32m================================================================================[0m
-[97m# Self-contained. Runs in the browser; no Ubuntu commands needed.[0m
-
-[32m1. Open the Remix IDE:  https://remix.ethereum.org/[0m
-[2;37m2. In File Explorer > contracts, create a new file named Voting.sol[0m
-[90m3. Paste the code below and save (Ctrl+S).[0m
-
-[37m// SPDX-License-Identifier: MIT[0m
-[32mpragma solidity ^0.8.24;[0m
-
-[2;37mcontract Voting {[0m
-
-[1;32m    address public owner;[0m
-[92m    uint public teamA;[0m
-[37m    uint public teamB;[0m
-[32m    uint public teamC;[0m
-[2;37m    mapping(address => bool) public voted;[0m
-
-[37m    constructor() { owner = msg.sender; }[0m
-
-[2;32m    function voteA() public {[0m
-[90m        require(!voted[msg.sender], "Already voted");[0m
-[1;90m        voted[msg.sender] = true; teamA++;[0m
-[37m    }[0m
-[2;37m    function voteB() public {[0m
-[1;90m        require(!voted[msg.sender], "Already voted");[0m
-[97m        voted[msg.sender] = true; teamB++;[0m
-[2;37m    }[0m
-[32m    function voteC() public {[0m
-[2;32m        require(!voted[msg.sender], "Already voted");[0m
-[92m        voted[msg.sender] = true; teamC++;[0m
-[1;90m    }[0m
-[1;92m    function totalVotes() public view returns (uint) {[0m
-[37m        return teamA + teamB + teamC;[0m
-[2;37m    }[0m
-[1;90m    function resultOfVoting() public view returns (string memory) {[0m
-[1;92m        if (teamA > teamB && teamA > teamC) { return "A is Winning"; }[0m
-[92m        else if (teamB > teamA && teamB > teamC) { return "B is Winning"; }[0m
-[2;32m        else if (teamC > teamA && teamC > teamB) { return "C is Winning"; }[0m
-[1;32m        else { return "Tie"; }[0m
-[37m    }[0m
-[2;32m}[0m
-
-[1;92m4. Solidity Compiler tab > Compile Voting.sol (no errors).[0m
-[1;32m5. Deploy & Run Transactions tab > choose "Remix VM" > Deploy.[0m
-[32m6. Call voteA / voteB / voteC.[0m
-[90m#    One vote per account; switch Account in the top bar to vote again.[0m
-[92m7. Read teamA, teamB, teamC, totalVotes, and click resultOfVoting.[0m
-
-
-[97m================================================================================[0m
-[2;32m PRACTICAL 7 - Create a MetaMask Account - GUI [0m
-[1;92m================================================================================[0m
-[97m# Self-contained. Runs in the browser; no Ubuntu commands needed.[0m
-
-[1;32m1. Open https://metamask.io/ > Download > Install MetaMask for Chrome > Add to Chrome.[0m
-[32m2. Create a new wallet.[0m
-[1;92m3. Agree to the terms > I agree.[0m
-[37m4. Enter a password > Create a new wallet.[0m
-[2;32m5. Click "Remind me later" (skip the seed-phrase backup for this lab).[0m
-[97m6. Select the checkbox > Skip / Next > Done. The wallet is created.[0m
-[2;37m7. Add another account: account icon > Add account > enter a name > Create.[0m
-[1;32m8. Send tokens: Send > paste the receiver address > amount > confirm.[0m
-[32m9. Account details show the address and balance.[0m
-
-
-[2;32m================================================================================[0m
-[1;32m PRACTICAL 8 - Create a Truffle Project (MetaCoin) [0m
-[92m================================================================================[0m
-[1;92m# Self-contained. Copy each command block into Ubuntu (WSL) terminal.[0m
-
-
-[90m1. Install Node.js 18 (official bundle, includes npm):[0m
-[32m>: cd ~ && curl -O https://nodejs.org/dist/v18.20.8/node-v18.20.8-linux-x64.tar.xz && mkdir -p ~/node18 && tar xf node-v18.20.8-linux-x64.tar.xz -C ~/node18 --strip-components=1 && rm -f node-v18.20.8-linux-x64.tar.xz[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-[1;92m>: echo 'export PATH="$HOME/node18/bin:$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc[0m
-[1;90m>: source ~/.bashrc[0m
-[2;32m>: npm config set prefix "$HOME/.npm-global"[0m
-[92m>: node -v && npm -v[0m
-
-[2;37m2. Install Truffle globally:[0m
-[97m>: npm install -g truffle[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mInstalling packages ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[1;90m3. Open VS Code, then create and enter an empty project folder:[0m
-[1;32m>: mkdir -p ~/metacoin && cd ~/metacoin[0m
-[97m>: code .[0m
-
-[1;92m4. Unbox the MetaCoin project (run in the EMPTY folder):[0m
-[92m>: truffle unbox metacoin[0m
-[2;90m  â”‚ [0m[1;33m[######--------------------][0m[33m  25%[0m  [2;37mDownloading MetaCoin ...[0m
-[2;90m  â”‚ [0m[1;33m[################----------][0m[33m  65%[0m  [2;37mDownloading MetaCoin ...[0m
-[2;90m  â”‚ [0m[1;33m[##########################][0m[33m 100%[0m  [2;37mDownloading MetaCoin ...[0m
-[2;90m  â”‚ [0m[1;32mâœ” [0m[32mDownload complete[0m
-
-[1;90m5. Start the Truffle development blockchain:[0m
-[32m>: truffle develop[0m
-
-[92m6. In the truffle(develop)> console - compile and migrate:[0m
-[2;32mcompile[0m
-[97mmigrate[0m
-
-[1;92m7. In the console - inspect the deployed contract and balances:[0m
-[90mlet instance = await MetaCoin.deployed()[0m
-[97mlet accounts = await web3.eth.getAccounts()[0m
-[32mlet balance = await instance.getBalance(accounts[0])[0m
-[2;32mbalance.toNumber()[0m
-
-[90m8. Check the ETH balance of account 0 (in ether):[0m
-[37mlet ethBalance = await web3.eth.getBalance(accounts[0])[0m
-[1;92mweb3.utils.fromWei(ethBalance, 'ether')[0m
-
-[1;32m9. Send 500 MetaCoins to account 1 and verify both balances:[0m
-[2;32minstance.sendCoin(accounts[1], 500)[0m
-[37mlet received = await instance.getBalance(accounts[1])[0m
-[97mreceived.toNumber()[0m
-[90mlet sent = await instance.getBalance(accounts[0])[0m
-[1;90msent.toNumber()[0m
-
-[32m# (Optional, outside the console) Run the test suite:[0m
-[97m#   EXIT the truffle develop console first (type .exit), then:[0m
-[1;90m>: truffle test[0m
-
-[37m################################################################################[0m
-[97m#                              END OF PRACTICALS[0m
-[92m################################################################################[0m
-
-
+[32mfrom ecdsa import SigningKey,SECP256k1[0m
+[1;90mp=SigningKey.generate(curve=SECP256k1); q=p.verifying_key[0m
+[2;32mm=b"Cryptography with ECC"; s=p.sign(m)[0m
+[2;37mprint("Signature:",s.hex()); print("Is Signature Valid?:",q.verify(s,m))[0m
